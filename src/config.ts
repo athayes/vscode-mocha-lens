@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { CodeLensOption, isNodeExecuteAbleFile, normalizePath, quote, validateCodeLensOptions } from './util';
 
-export class JestRunnerConfig {
+export class Config {
   /**
    * The command that runs jest.
    * Defaults to: node "node_modules/.bin/jest"

@@ -1,12 +1,11 @@
-'use strict';
 import * as vscode from 'vscode';
 
 import { JestRunner } from './jestRunner';
 import { JestCodeLensProvider } from './jestCodeLensProvider';
-import { JestRunnerConfig } from './jestRunnerConfig';
+import { Config } from './config';
 
 export function activate(context: vscode.ExtensionContext): void {
-  const config = new JestRunnerConfig();
+  const config = new Config();
   const jestRunner = new JestRunner(config);
   const codeLensProvider = new JestCodeLensProvider(config.codeLensOptions);
 

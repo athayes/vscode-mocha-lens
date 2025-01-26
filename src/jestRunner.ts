@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
-
-import { JestRunnerConfig } from './jestRunnerConfig';
+import { Config } from './config';
 import { parse } from './parser';
 import {
   escapeRegExp,
@@ -28,7 +27,7 @@ export class JestRunner {
   private openNativeTerminal: boolean;
   private commands: string[] = [];
 
-  constructor(private readonly config: JestRunnerConfig) {
+  constructor(private readonly config: Config) {
     this.setup();
     this.openNativeTerminal = config.isRunInExternalNativeTerminal;
   }

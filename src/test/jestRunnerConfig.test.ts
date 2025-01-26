@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { JestRunnerConfig } from '../jestRunnerConfig';
+import { Config } from '../config';
 import { Uri, WorkspaceConfiguration, WorkspaceFolder } from './__mocks__/vscode';
 import { isWindows } from '../util';
 
@@ -10,9 +10,9 @@ const describes = {
 
 describe('JestRunnerConfig', () => {
   describes.windows('Windows style paths', () => {
-    let jestRunnerConfig: JestRunnerConfig;
+    let jestRunnerConfig: Config;
     beforeEach(() => {
-      jestRunnerConfig = new JestRunnerConfig();
+      jestRunnerConfig = new Config();
       jest
         .spyOn(vscode.workspace, 'getWorkspaceFolder')
         .mockReturnValue(new WorkspaceFolder(new Uri('C:\\project') as any) as any);
@@ -34,10 +34,10 @@ describe('JestRunnerConfig', () => {
   });
 
   describes.linux('Linux style paths', () => {
-    let jestRunnerConfig: JestRunnerConfig;
+    let jestRunnerConfig: Config;
 
     beforeEach(() => {
-      jestRunnerConfig = new JestRunnerConfig();
+      jestRunnerConfig = new Config();
       jest
         .spyOn(vscode.workspace, 'getWorkspaceFolder')
         .mockReturnValue(new WorkspaceFolder(new Uri('/home/user/project') as any) as any);
