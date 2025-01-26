@@ -1,14 +1,6 @@
 import * as path from 'path';
 import { execSync } from 'child_process';
 
-export function getDirName(filePath: string): string {
-  return path.dirname(filePath);
-}
-
-export function getFileName(filePath: string): string {
-  return path.basename(filePath);
-}
-
 export function isWindows(): boolean {
   return process.platform.includes('win32');
 }
