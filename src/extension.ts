@@ -28,15 +28,14 @@ export function activate(context: vscode.ExtensionContext): void {
     },
   );
 
-  if (!config.isCodeLensDisabled) {
-    const docSelectors: vscode.DocumentFilter[] = [
-      {
-        pattern: vscode.workspace.getConfiguration().get('jestrunner.codeLensSelector'),
-      },
-    ];
-    const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(docSelectors, codeLensProvider);
-    context.subscriptions.push(codeLensProviderDisposable);
-  }
+  const docSelectors: vscode.DocumentFilter[] = [
+    {
+      pattern: vscode.workspace.getConfiguration().get('jestrunner.codeLensSelector'),
+    },
+  ];
+  const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(docSelectors, codeLensProvider);
+  context.subscriptions.push(codeLensProviderDisposable);
+
   context.subscriptions.push(runJest);
   context.subscriptions.push(debugJest);
 }

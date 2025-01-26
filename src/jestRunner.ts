@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import * as fs from 'fs';
 
 import { JestRunnerConfig } from './jestRunnerConfig';
 import { parse } from './parser';
@@ -8,8 +7,6 @@ import {
   escapeRegExpForPath,
   escapeSingleQuotes,
   findFullTestName,
-  getDirName,
-  getFileName,
   normalizePath,
   pushMany,
   quote,

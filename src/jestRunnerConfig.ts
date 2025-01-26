@@ -138,11 +138,6 @@ export class JestRunnerConfig {
     return {};
   }
 
-  public get isCodeLensDisabled(): boolean {
-    const isCodeLensDisabled: boolean = vscode.workspace.getConfiguration().get('jestrunner.disableCodeLens');
-    return isCodeLensDisabled ? isCodeLensDisabled : false;
-  }
-
   public get isRunInExternalNativeTerminal(): boolean {
     const isRunInExternalNativeTerminal: boolean = vscode.workspace
       .getConfiguration()
