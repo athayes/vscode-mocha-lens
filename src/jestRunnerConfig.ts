@@ -77,8 +77,7 @@ export class JestRunnerConfig {
   }
 
   private get currentWorkspaceFolderPath(): string {
-    const editor = vscode.window.activeTextEditor;
-    return vscode.workspace.getWorkspaceFolder(editor.document.uri).uri.fsPath;
+    return vscode.workspace.getWorkspaceFolder(vscode.window.activeTextEditor.document.uri).uri.fsPath;
   }
 
   public getJestConfigPath(targetPath: string): string {
