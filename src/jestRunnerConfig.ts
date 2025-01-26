@@ -96,7 +96,13 @@ export class JestRunnerConfig {
     let currentFolderPath: string = targetPath || path.dirname(vscode.window.activeTextEditor.document.fileName);
     let currentFolderConfigPath: string;
     do {
-      for (const configFilename of ['jest.config.js', 'jest.config.ts', 'jest.config.cjs', 'jest.config.mjs', 'jest.config.json']) {
+      for (const configFilename of [
+        'jest.config.js',
+        'jest.config.ts',
+        'jest.config.cjs',
+        'jest.config.mjs',
+        'jest.config.json',
+      ]) {
         currentFolderConfigPath = path.join(currentFolderPath, configFilename);
 
         if (fs.existsSync(currentFolderConfigPath)) {
@@ -115,7 +121,7 @@ export class JestRunnerConfig {
         return runOptions;
       } else {
         vscode.window.showWarningMessage(
-          'Please check your vscode settings. "jestrunner.runOptions" must be an Array. '
+          'Please check your vscode settings. "jestrunner.runOptions" must be an Array. ',
         );
       }
     }

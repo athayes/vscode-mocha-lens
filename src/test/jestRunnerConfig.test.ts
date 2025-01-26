@@ -26,7 +26,7 @@ describe('JestRunnerConfig', () => {
       jest.spyOn(vscode.workspace, 'getConfiguration').mockReturnValue(
         new WorkspaceConfiguration({
           'jestrunner.projectPath': projectPath,
-        })
+        }),
       );
 
       expect(jestRunnerConfig.cwd).toBe('C:\\project\\jestProject');
@@ -50,7 +50,7 @@ describe('JestRunnerConfig', () => {
       jest.spyOn(vscode.workspace, 'getConfiguration').mockReturnValue(
         new WorkspaceConfiguration({
           'jestrunner.projectPath': projectPath,
-        })
+        }),
       );
 
       expect(jestRunnerConfig.cwd).toBe('/home/user/project/jestProject');
