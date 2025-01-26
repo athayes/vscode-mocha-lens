@@ -4,7 +4,7 @@
   "description": "Run jest tests with CodeLens",
   "version": "0.0.1",
   "publisher": "athayes",
-  "author": "Tristan Teufel",
+  "author": "Anthony Hayes, Tristan Teufel",
   "repository": {
     "type": "git",
     "url": "https://github.com/athayes/vscode-jest-lens.git"
@@ -129,28 +129,8 @@
         "title": "Run Jest"
       },
       {
-        "command": "extension.runJestPath",
-        "title": "Run Jest on Path"
-      },
-      {
-        "command": "extension.runJestFile",
-        "title": "Run Jest on File"
-      },
-      {
         "command": "extension.debugJest",
         "title": "Debug Jest"
-      },
-      {
-        "command": "extension.debugJestPath",
-        "title": "Debug Jest on Path"
-      },
-      {
-        "command": "extension.runJestFileWithWatchMode",
-        "title": "Run Jest File in Watch Mode"
-      },
-      {
-        "command": "extension.watchJest",
-        "title": "Run Jest --watch"
       }
     ]
   },
