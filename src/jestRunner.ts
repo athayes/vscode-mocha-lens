@@ -39,7 +39,6 @@ export class JestRunner {
   public async runCurrentTest(
     argument?: Record<string, unknown> | string,
     options?: string[],
-    collectCoverageFromCurrentFile?: boolean,
   ): Promise<void> {
     const currentTestName = typeof argument === 'string' ? argument : undefined;
     const editor = vscode.window.activeTextEditor;
@@ -52,19 +51,6 @@ export class JestRunner {
     const filePath = editor.document.fileName;
 
     const finalOptions = options;
-    if (collectCoverageFromCurrentFile) {
-      const targetFileDir = getDirName(filePath);
-      const targetFileName = getFileName(filePath).replace(/\.(test|spec)\./, '.');
-
-      // if a file does not exist with the same name as the test file but without the test/spec part
-      // use test file's directory for coverage target
-      const coverageTarget = fs.existsSync(`${targetFileDir}/${targetFileName}`)
-        ? `**/${targetFileName}`
-        : `**/${getFileName(targetFileDir)}/**`;
-
-      finalOptions.push('--collectCoverageFrom');
-      finalOptions.push(quote(coverageTarget));
-    }
 
     const testName = currentTestName || this.findCurrentTestName(editor);
     const resolvedTestName = updateTestNameIfUsingProperties(testName);
