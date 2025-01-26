@@ -2,13 +2,13 @@
 import * as vscode from 'vscode';
 
 import { JestRunner } from './jestRunner';
-import { JestRunnerCodeLensProvider } from './JestRunnerCodeLensProvider';
+import { JestCodeLensProvider } from './jestCodeLensProvider';
 import { JestRunnerConfig } from './jestRunnerConfig';
 
 export function activate(context: vscode.ExtensionContext): void {
   const config = new JestRunnerConfig();
   const jestRunner = new JestRunner(config);
-  const codeLensProvider = new JestRunnerCodeLensProvider(config.codeLensOptions);
+  const codeLensProvider = new JestCodeLensProvider(config.codeLensOptions);
 
   const runJest = vscode.commands.registerCommand(
     'extension.runJest',
