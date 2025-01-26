@@ -81,7 +81,7 @@
             "description": "Enable desired codeLens, possible value : 'run', 'debug'. Defaults to ['run', 'debug'] ",
             "items": {
               "type": "string",
-              "description": "Either 'run' or 'debug'"
+              "description": "Options: 'run', 'debug'"
             },
             "scope": "window"
           },
