@@ -83,7 +83,7 @@ export function pushMany<T>(arr: T[], items: T[]): number {
   return Array.prototype.push.apply(arr, items);
 }
 
-export type CodeLensOption = 'run' | 'debug' | 'watch' | 'coverage' | 'current-test-coverage';
+export type CodeLensOption = 'run' | 'debug';
 
 function isCodeLensOption(option: string): option is CodeLensOption {
   return ['run', 'debug', 'watch', 'coverage', 'current-test-coverage'].includes(option);
