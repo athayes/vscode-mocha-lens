@@ -8,8 +8,8 @@ import {
   escapeRegExpForPath,
   escapeSingleQuotes,
   findFullTestName,
-  getFileName,
   getDirName,
+  getFileName,
   normalizePath,
   pushMany,
   quote,
@@ -23,8 +23,6 @@ interface DebugCommand {
 }
 
 export class JestRunner {
-  private previousCommand: string | DebugCommand;
-
   private terminal: vscode.Terminal;
 
   // support for running in a native external terminal
@@ -36,21 +34,6 @@ export class JestRunner {
   constructor(private readonly config: JestRunnerConfig) {
     this.setup();
     this.openNativeTerminal = config.isRunInExternalNativeTerminal;
-  }
-
-  //
-  // public methods
-  //
-
-  public async runTestsOnPath(path: string): Promise<void> {
-    const command = this.buildJestCommand(path);
-
-    this.previousCommand = command;
-
-    await this.goToCwd();
-    await this.runTerminalCommand(command);
-
-    await this.runExternalNativeTerminalCommand(this.commands);
   }
 
   public async runCurrentTest(
@@ -86,64 +69,13 @@ export class JestRunner {
     const testName = currentTestName || this.findCurrentTestName(editor);
     const resolvedTestName = updateTestNameIfUsingProperties(testName);
     const command = this.buildJestCommand(filePath, resolvedTestName, finalOptions);
-
-    this.previousCommand = command;
-
+    
     await this.goToCwd();
     await this.runTerminalCommand(command);
 
     await this.runExternalNativeTerminalCommand(this.commands);
   }
-
-  public async runCurrentFile(options?: string[]): Promise<void> {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-      return;
-    }
-
-    await editor.document.save();
-
-    const filePath = editor.document.fileName;
-    const command = this.buildJestCommand(filePath, undefined, options);
-
-    this.previousCommand = command;
-
-    await this.goToCwd();
-    await this.runTerminalCommand(command);
-
-    await this.runExternalNativeTerminalCommand(this.commands);
-  }
-
-  public async runPreviousTest(): Promise<void> {
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-      return;
-    }
-
-    await editor.document.save();
-
-    if (typeof this.previousCommand === 'string') {
-      await this.goToCwd();
-      await this.runTerminalCommand(this.previousCommand);
-    } else {
-      await this.executeDebugCommand(this.previousCommand);
-    }
-
-    await this.runExternalNativeTerminalCommand(this.commands);
-  }
-
-  public async debugTestsOnPath(path: string): Promise<void> {
-    const debugConfig = this.getDebugConfig(path);
-
-    await this.goToCwd();
-    await this.executeDebugCommand({
-      config: debugConfig,
-      documentUri: vscode.Uri.file(path),
-    });
-
-    await this.runExternalNativeTerminalCommand(this.commands);
-  }
-
+  
   public async debugCurrentTest(currentTestName?: string): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -165,10 +97,7 @@ export class JestRunner {
 
     await this.runExternalNativeTerminalCommand(this.commands);
   }
-
-  //
-  // private methods
-  //
+  
 
   private async executeDebugCommand(debugCommand: DebugCommand) {
     // prevent open of external terminal when debug command is executed
@@ -180,8 +109,6 @@ export class JestRunner {
     this.commands = [];
 
     vscode.debug.startDebugging(undefined, debugCommand.config);
-
-    this.previousCommand = debugCommand;
   }
 
   private getDebugConfig(filePath: string, currentTestName?: string): vscode.DebugConfiguration {
@@ -266,8 +193,7 @@ export class JestRunner {
   }
 
   private buildNativeTerminalCommand(toRun: string): string {
-    const command = `ttab -t 'jest-runner' "${toRun}"`;
-    return command;
+    return `ttab -t 'jest-runner' "${toRun}"`;
   }
 
   private async runExternalNativeTerminalCommand(commands: string[]): Promise<void> {

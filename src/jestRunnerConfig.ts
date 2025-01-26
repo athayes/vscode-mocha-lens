@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { normalizePath, quote, validateCodeLensOptions, CodeLensOption, isNodeExecuteAbleFile } from './util';
+import { CodeLensOption, isNodeExecuteAbleFile, normalizePath, quote, validateCodeLensOptions } from './util';
 
 export class JestRunnerConfig {
   /**
@@ -163,7 +163,6 @@ export class JestRunnerConfig {
     return isYarnPnp ? isYarnPnp : false;
   }
   public get getYarnPnpCommand(): string {
-    const yarnPnpCommand: string = vscode.workspace.getConfiguration().get('jestrunner.yarnPnpCommand');
-    return yarnPnpCommand;
+    return vscode.workspace.getConfiguration().get('jestrunner.yarnPnpCommand');
   }
 }
