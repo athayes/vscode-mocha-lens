@@ -4,6 +4,8 @@ import { JestRunner } from './jestRunner';
 import { JestCodeLensProvider } from './jestCodeLensProvider';
 import { Config } from './config';
 
+type Argument = Record<string, unknown> | string;
+
 export function activate(context: vscode.ExtensionContext): void {
   const config = new Config();
   const jestRunner = new JestRunner(config);
@@ -11,14 +13,14 @@ export function activate(context: vscode.ExtensionContext): void {
 
   const runJest = vscode.commands.registerCommand(
     'extension.runJest',
-    async (argument: Record<string, unknown> | string) => {
+    async (argument: Argument) => {
       return jestRunner.runCurrentTest(argument);
     },
   );
 
   const debugJest = vscode.commands.registerCommand(
     'extension.debugJest',
-    async (argument: Record<string, unknown> | string) => {
+    async (argument: Argument) => {
       if (typeof argument === 'string') {
         return jestRunner.debugCurrentTest(argument);
       } else {
