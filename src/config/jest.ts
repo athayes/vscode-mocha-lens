@@ -37,7 +37,7 @@ export async function buildJestArgs(
 
   args.push(quoter(escapeRegExpForPath(normalizePath(filePath))));
 
-  const jestConfigPath = await findJestConfig({ filePath });
+  const jestConfigPath = await findJestConfig(filePath);
   if (jestConfigPath) {
     args.push('-c');
     args.push(quoter(normalizePath(jestConfigPath)));
