@@ -15,7 +15,11 @@ export class JestRunner {
   private commands: string[] = [];
 
   constructor(private readonly config: Config) {
-    this.setup();
+    vscode.window.onDidCloseTerminal((closedTerminal: vscode.Terminal) => {
+      if (this.terminal === closedTerminal) {
+        this.terminal = null;
+      }
+    });
   }
 
   public async runCurrentTest(argument?: Record<string, unknown> | string, options?: string[]): Promise<void> {
@@ -113,13 +117,5 @@ export class JestRunner {
     this.terminal.show(this.config.preserveEditorFocus);
     await vscode.commands.executeCommand('workbench.action.terminal.clear');
     this.terminal.sendText(command);
-  }
-
-  private setup() {
-    vscode.window.onDidCloseTerminal((closedTerminal: vscode.Terminal) => {
-      if (this.terminal === closedTerminal) {
-        this.terminal = null;
-      }
-    });
   }
 }
