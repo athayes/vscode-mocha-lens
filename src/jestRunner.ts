@@ -1,17 +1,9 @@
 import * as vscode from 'vscode';
 import { Config } from './config';
 import { parse } from './parser';
-import {
-  escapeRegExp,
-  escapeRegExpForPath,
-  escapeSingleQuotes,
-  findFullTestName,
-  normalizePath,
-  pushMany,
-  quote,
-  unquote,
-  updateTestNameIfUsingProperties,
-} from './util';
+import { escapeRegExp, findFullTestName, pushMany, unquote, updateTestNameIfUsingProperties } from './util';
+import { findJsWorkspaceRoot } from './config/files';
+import { buildJestArgs, getJestCommand } from './config/jest';
 
 interface DebugCommand {
   documentUri: vscode.Uri;
@@ -20,16 +12,10 @@ interface DebugCommand {
 
 export class JestRunner {
   private terminal: vscode.Terminal;
-
-  // support for running in a native external terminal
-  // force runTerminalCommand to push to a queue and run in a native external
-  // terminal after all commands been pushed
-  private openNativeTerminal: boolean;
   private commands: string[] = [];
 
   constructor(private readonly config: Config) {
     this.setup();
-    this.openNativeTerminal = config.isRunInExternalNativeTerminal;
   }
 
   public async runCurrentTest(argument?: Record<string, unknown> | string, options?: string[]): Promise<void> {
@@ -40,19 +26,14 @@ export class JestRunner {
     }
 
     await editor.document.save();
-
-    const filePath = editor.document.fileName;
-
-    const finalOptions = options;
-
     const testName = currentTestName || this.findCurrentTestName(editor);
     const resolvedTestName = updateTestNameIfUsingProperties(testName);
-    const command = this.buildJestCommand(filePath, resolvedTestName, finalOptions);
 
-    await this.goToCwd();
+    const args = await buildJestArgs(editor.document.fileName, resolvedTestName, true, options);
+    const jestCommand = await getJestCommand();
+    const command = `${jestCommand} ${args.join(' ')}`;
+
     await this.runTerminalCommand(command);
-
-    await this.runExternalNativeTerminalCommand(this.commands);
   }
 
   public async debugCurrentTest(currentTestName?: string): Promise<void> {
@@ -62,25 +43,20 @@ export class JestRunner {
     }
 
     await editor.document.save();
-
-    const filePath = editor.document.fileName;
     const testName = currentTestName || this.findCurrentTestName(editor);
     const resolvedTestName = updateTestNameIfUsingProperties(testName);
-    const debugConfig = this.getDebugConfig(filePath, resolvedTestName);
 
-    await this.goToCwd();
+    const cwd = await findJsWorkspaceRoot();
+    const jestCommand = await getJestCommand();
+    const debugConfig = await this.getDebugConfig(editor.document.fileName, jestCommand, cwd, resolvedTestName);
+
     await this.executeDebugCommand({
       config: debugConfig,
       documentUri: editor.document.uri,
     });
-
-    await this.runExternalNativeTerminalCommand(this.commands);
   }
 
   private async executeDebugCommand(debugCommand: DebugCommand) {
-    // prevent open of external terminal when debug command is executed
-    this.openNativeTerminal = false;
-
     for (const command of this.commands) {
       await this.runTerminalCommand(command);
     }
@@ -89,26 +65,26 @@ export class JestRunner {
     vscode.debug.startDebugging(undefined, debugCommand.config);
   }
 
-  private getDebugConfig(filePath: string, currentTestName?: string): vscode.DebugConfiguration {
+  private async getDebugConfig(
+    filePath: string,
+    program: string,
+    cwd: string,
+    currentTestName?: string,
+  ): Promise<vscode.DebugConfiguration> {
     const config: vscode.DebugConfiguration = {
       console: 'integratedTerminal',
       internalConsoleOptions: 'neverOpen',
       name: 'Debug Jest Tests',
-      program: this.config.jestBinPath,
+      program,
       request: 'launch',
       type: 'node',
-      cwd: this.config.cwd,
+      cwd,
       ...this.config.debugOptions,
     };
 
     config.args = config.args ? config.args.slice() : [];
 
-    if (this.config.isYarnPnpSupportEnabled) {
-      config.args = ['jest'];
-      config.program = `.yarn/releases/${this.config.getYarnPnpCommand}`;
-    }
-
-    const standardArgs = this.buildJestArgs(filePath, currentTestName, false);
+    const standardArgs = await buildJestArgs(filePath, currentTestName, false);
     pushMany(config.args, standardArgs);
     config.args.push('--runInBand');
 
@@ -130,75 +106,7 @@ export class JestRunner {
     return fullTestName ? escapeRegExp(fullTestName) : undefined;
   }
 
-  private buildJestCommand(filePath: string, testName?: string, options?: string[]): string {
-    const args = this.buildJestArgs(filePath, testName, true, options);
-    return `${this.config.jestCommand} ${args.join(' ')}`;
-  }
-
-  private buildJestArgs(filePath: string, testName: string, withQuotes: boolean, options: string[] = []): string[] {
-    const args: string[] = [];
-    const quoter = withQuotes ? quote : (str) => str;
-
-    args.push(quoter(escapeRegExpForPath(normalizePath(filePath))));
-
-    const jestConfigPath = this.config.getJestConfigPath(filePath);
-    if (jestConfigPath) {
-      args.push('-c');
-      args.push(quoter(normalizePath(jestConfigPath)));
-    }
-
-    if (testName) {
-      args.push('-t');
-      args.push(quoter(escapeSingleQuotes(testName)));
-    }
-
-    const setOptions = new Set(options);
-
-    if (this.config.runOptions) {
-      this.config.runOptions.forEach((option) => setOptions.add(option));
-    }
-
-    args.push(...setOptions);
-
-    return args;
-  }
-
-  private async goToCwd() {
-    const command = `cd ${quote(this.config.cwd)}`;
-    if (this.config.changeDirectoryToWorkspaceRoot) {
-      await this.runTerminalCommand(command);
-    }
-  }
-
-  private buildNativeTerminalCommand(toRun: string): string {
-    return `ttab -t 'jest-runner' "${toRun}"`;
-  }
-
-  private async runExternalNativeTerminalCommand(commands: string[]): Promise<void> {
-    if (!this.openNativeTerminal) {
-      this.commands = [];
-      return;
-    }
-
-    const command: string = commands.join('; ');
-    const externalCommand: string = this.buildNativeTerminalCommand(command);
-    this.commands = [];
-
-    if (!this.terminal) {
-      this.terminal = vscode.window.createTerminal('jest');
-    }
-
-    this.terminal.show(this.config.preserveEditorFocus);
-    await vscode.commands.executeCommand('workbench.action.terminal.clear');
-    this.terminal.sendText(externalCommand);
-  }
-
   private async runTerminalCommand(command: string) {
-    if (this.openNativeTerminal) {
-      this.commands.push(command);
-      return;
-    }
-
     if (!this.terminal) {
       this.terminal = vscode.window.createTerminal('jest');
     }

@@ -11,23 +11,17 @@ export function activate(context: vscode.ExtensionContext): void {
   const jestRunner = new JestRunner(config);
   const codeLensProvider = new JestCodeLensProvider(config.codeLensOptions);
 
-  const runJest = vscode.commands.registerCommand(
-    'extension.runJest',
-    async (argument: Argument) => {
-      return jestRunner.runCurrentTest(argument);
-    },
-  );
+  const runJest = vscode.commands.registerCommand('extension.runJest', async (argument: Argument) => {
+    return jestRunner.runCurrentTest(argument);
+  });
 
-  const debugJest = vscode.commands.registerCommand(
-    'extension.debugJest',
-    async (argument: Argument) => {
-      if (typeof argument === 'string') {
-        return jestRunner.debugCurrentTest(argument);
-      } else {
-        return jestRunner.debugCurrentTest();
-      }
-    },
-  );
+  const debugJest = vscode.commands.registerCommand('extension.debugJest', async (argument: Argument) => {
+    if (typeof argument === 'string') {
+      return jestRunner.debugCurrentTest(argument);
+    } else {
+      return jestRunner.debugCurrentTest();
+    }
+  });
 
   const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(
     [
