@@ -32,10 +32,7 @@ export class JestRunner {
     this.openNativeTerminal = config.isRunInExternalNativeTerminal;
   }
 
-  public async runCurrentTest(
-    argument?: Record<string, unknown> | string,
-    options?: string[],
-  ): Promise<void> {
+  public async runCurrentTest(argument?: Record<string, unknown> | string, options?: string[]): Promise<void> {
     const currentTestName = typeof argument === 'string' ? argument : undefined;
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -51,13 +48,13 @@ export class JestRunner {
     const testName = currentTestName || this.findCurrentTestName(editor);
     const resolvedTestName = updateTestNameIfUsingProperties(testName);
     const command = this.buildJestCommand(filePath, resolvedTestName, finalOptions);
-    
+
     await this.goToCwd();
     await this.runTerminalCommand(command);
 
     await this.runExternalNativeTerminalCommand(this.commands);
   }
-  
+
   public async debugCurrentTest(currentTestName?: string): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -79,7 +76,6 @@ export class JestRunner {
 
     await this.runExternalNativeTerminalCommand(this.commands);
   }
-  
 
   private async executeDebugCommand(debugCommand: DebugCommand) {
     // prevent open of external terminal when debug command is executed
