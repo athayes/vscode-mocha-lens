@@ -85,18 +85,23 @@ export class JestRunner {
     cwd: string,
     currentTestName?: string,
   ): Promise<vscode.DebugConfiguration> {
+    const splitCommand = program.split(' ');
+
     const config: vscode.DebugConfiguration = {
       console: 'integratedTerminal',
       internalConsoleOptions: 'neverOpen',
       name: 'Debug Jest Tests',
-      program,
+      program: splitCommand[0],
       request: 'launch',
       type: 'node',
       cwd,
       ...this.config.debugOptions,
-    };
+    }
 
     config.args = config.args ? config.args.slice() : [];
+
+    // add the rest of the invoke args
+    config.args.push(...splitCommand.slice(1));
 
     const standardArgs = await buildJestArgs(filePath, currentTestName, false, this.config);
     pushMany(config.args, standardArgs);
