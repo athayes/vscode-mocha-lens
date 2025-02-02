@@ -108,6 +108,7 @@ export class JestRunner {
     return fullTestName ? escapeRegExp(fullTestName) : undefined;
   }
 
+  // todo should I put a cwd here?
   private async runTerminalCommand(command: string) {
     if (!this.terminal) {
       this.terminal = vscode.window.createTerminal('jest');
