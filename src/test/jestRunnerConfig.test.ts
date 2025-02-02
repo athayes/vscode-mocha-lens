@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { Config } from '../config';
+import { Config } from '../config/config';
 import { Uri, WorkspaceConfiguration, WorkspaceFolder } from './__mocks__/vscode';
 import { isWindows } from '../util';
 

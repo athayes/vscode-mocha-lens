@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import { JestRunner } from './jestRunner';
 import { JestCodeLensProvider } from './jestCodeLensProvider';
-import { Config } from './config';
+import { Config } from './config/config';
 
 type Argument = Record<string, unknown> | string;
 

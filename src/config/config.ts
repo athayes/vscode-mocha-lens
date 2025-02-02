@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { CodeLensOption, validateCodeLensOptions } from './util';
+import { CodeLensOption, validateCodeLensOptions } from '../util';
 
 export class Config {
   public get preserveEditorFocus(): boolean {
