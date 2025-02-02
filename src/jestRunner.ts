@@ -4,7 +4,6 @@ import parse from 'jest-editor-support/build/parsers';
 import {
   escapeRegExp,
   findFullTestName,
-  normalizePath,
   pushMany,
   unquote,
   updateTestNameIfUsingProperties
@@ -34,10 +33,12 @@ export class JestRunner {
     await editor.document.save();
     const testName = currentTestName || this.findCurrentTestName(editor);
     const resolvedTestName = updateTestNameIfUsingProperties(testName);
-    const normalizedPath = normalizePath(editor.document.fileName);
+    ///const normalizedPath = normalizePath(editor.document.fileName);
+    const filePath = editor.document.fileName;
+    const cwd = await findJsWorkspaceRoot(filePath);
 
     const args = await buildJestArgs(editor.document.fileName, resolvedTestName, true, this.config, options);
-    const jestCommand = await getJestCommand(this.config, normalizedPath);
+    const jestCommand = await getJestCommand(this.config, cwd);
     const command = `${jestCommand} ${args.join(' ')}`;
 
     await this.runTerminalCommand(command);
