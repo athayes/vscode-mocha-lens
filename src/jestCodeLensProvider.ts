@@ -1,4 +1,5 @@
-import { parse, ParsedNode } from './parser';
+import type { ParsedNode } from 'jest-editor-support';
+import parse from 'jest-editor-support/build/parsers';
 import { CodeLens, CodeLensProvider, Range, TextDocument } from 'vscode';
 import { findFullTestName, escapeRegExp, CodeLensOption } from './util';
 

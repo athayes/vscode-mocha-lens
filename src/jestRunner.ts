@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { Config } from './config';
-import { parse } from './parser';
+import parse from 'jest-editor-support/build/parsers';
 import { escapeRegExp, findFullTestName, pushMany, unquote, updateTestNameIfUsingProperties } from './util';
 import { findJsWorkspaceRoot } from './config/files';
 import { buildJestArgs, getJestCommand } from './config/jest';
