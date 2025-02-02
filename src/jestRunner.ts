@@ -12,11 +12,6 @@ import {
 import { findJsWorkspaceRoot } from './config/files';
 import { buildJestArgs, getJestCommand } from './config/jest';
 
-interface DebugCommand {
-  documentUri: vscode.Uri;
-  config: vscode.DebugConfiguration;
-}
-
 export class JestRunner {
   private terminal: vscode.Terminal;
   private commands: string[] = [];
