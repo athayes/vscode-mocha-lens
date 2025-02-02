@@ -1,11 +1,11 @@
-import vscode from 'vscode';
 import { detect } from 'detect-package-manager';
 import { escapeRegExpForPath, escapeSingleQuotes, normalizePath, quote } from '../util';
 import { findJestConfig } from './files';
+import { Config } from './config';
 
-export async function getJestCommand() {
+export async function getJestCommand(config: Config) {
   // custom
-  const jestCommand: string = vscode.workspace.getConfiguration().get('jestrunner.jestCommand');
+  const jestCommand: string = config.getJestCommand();
   if (jestCommand) {
     return jestCommand;
   }
@@ -30,14 +30,16 @@ export async function buildJestArgs(
   filePath: string,
   testName: string,
   withQuotes: boolean,
+  config: Config,
   options: string[] = [],
 ): Promise<string[]> {
   const args: string[] = [];
   const quoter = withQuotes ? quote : (str) => str;
 
-  args.push(quoter(escapeRegExpForPath(normalizePath(filePath))));
+  const normalizedFilePath = normalizePath(filePath);
+  args.push(quoter(escapeRegExpForPath(normalizedFilePath)));
 
-  const jestConfigPath = await findJestConfig(filePath);
+  const jestConfigPath = await findJestConfig(normalizedFilePath);
   if (jestConfigPath) {
     args.push('-c');
     args.push(quoter(normalizePath(jestConfigPath)));
@@ -50,8 +52,8 @@ export async function buildJestArgs(
 
   const setOptions = new Set(options);
 
-  if (this.config.runOptions) {
-    this.config.runOptions.forEach((option) => setOptions.add(option));
+  if (config.runOptions) {
+    config.runOptions.forEach((option) => setOptions.add(option));
   }
 
   args.push(...setOptions);

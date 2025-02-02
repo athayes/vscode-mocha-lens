@@ -1,10 +1,11 @@
 import { findUp } from 'find-up';
 import vscode from 'vscode';
-import path from 'node:path';
+import * as path from 'path';
+import { normalizePath } from '../util';
 
 export async function findJsWorkspaceRoot(filePath: string) {
   // todo should stopAt the vscode workspace root
-  const packageJson = await findUp('package.json', { cwd: path.dirname(filePath) });
+  const packageJson = await findUp('package.json', { cwd: path.dirname(normalizePath(filePath)) });
 
   if (packageJson) {
     return path.dirname(packageJson);
@@ -21,7 +22,8 @@ const jestConfigPossibilities = [
   'jest.config.json',
 ];
 
-export async function findJestConfig(filePath) {
-  console.log('filePath', filePath);
-  return findUp(jestConfigPossibilities, { cwd: path.dirname(filePath), stopAt: this.currentWorkspaceFolderPath });
+export async function findJestConfig(filePath: string) {
+  const cwd = path.dirname(filePath);
+  // todo get root folder and add stopAt
+  return findUp(jestConfigPossibilities, { cwd });
 }

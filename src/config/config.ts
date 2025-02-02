@@ -20,6 +20,10 @@ export class Config {
     return null;
   }
 
+  public getJestCommand(): string {
+    return vscode.workspace.getConfiguration().get('jestrunner.jestCommand');
+  }
+
   public get debugOptions(): Partial<vscode.DebugConfiguration> {
     const debugOptions = vscode.workspace.getConfiguration().get('jestrunner.debugOptions');
     if (debugOptions) {

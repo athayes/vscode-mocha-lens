@@ -33,8 +33,8 @@ export class JestRunner {
     const testName = currentTestName || this.findCurrentTestName(editor);
     const resolvedTestName = updateTestNameIfUsingProperties(testName);
 
-    const args = await buildJestArgs(editor.document.fileName, resolvedTestName, true, options);
-    const jestCommand = await getJestCommand();
+    const args = await buildJestArgs(editor.document.fileName, resolvedTestName, true, this.config, options);
+    const jestCommand = await getJestCommand(this.config);
     const command = `${jestCommand} ${args.join(' ')}`;
 
     await this.runTerminalCommand(command);
@@ -49,10 +49,10 @@ export class JestRunner {
     await editor.document.save();
     const testName = currentTestName || this.findCurrentTestName(editor);
     const resolvedTestName = updateTestNameIfUsingProperties(testName);
-
+    
     const filePath = editor.document.fileName;
     const cwd = await findJsWorkspaceRoot(filePath);
-    const jestCommand = await getJestCommand();
+    const jestCommand = await getJestCommand(this.config);
     const debugConfig = await this.getDebugConfig(editor.document.fileName, jestCommand, cwd, resolvedTestName);
 
     await this.executeDebugCommand({
@@ -89,7 +89,7 @@ export class JestRunner {
 
     config.args = config.args ? config.args.slice() : [];
 
-    const standardArgs = await buildJestArgs(filePath, currentTestName, false);
+    const standardArgs = await buildJestArgs(filePath, currentTestName, false, this.config);
     pushMany(config.args, standardArgs);
     config.args.push('--runInBand');
 
