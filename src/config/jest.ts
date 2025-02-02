@@ -1,28 +1,33 @@
-import { detect } from 'detect-package-manager';
 import { escapeRegExpForPath, escapeSingleQuotes, normalizePath, quote } from '../util';
 import { findJestConfig } from './files';
 import { Config } from './config';
+import path from 'path';
+import { execSync } from 'child_process';
 
-export async function getJestCommand(config: Config, normalizedPath: string): Promise<string> {
-  // custom
+export async function getJestCommand(config: Config, cwd: string): Promise<string> {
+  // custom jest command if you want
   const jestCommand: string = config.getJestCommand();
   if (jestCommand) {
     return jestCommand;
   }
 
-  const packageManager = await detect({ cwd: normalizedPath });
+  // I wonder if there's an npm module for this, but it's probably fine for now
+  const fallbackRelativeJestBinPath = 'node_modules/jest/bin/jest.js';
+  const mayRelativeJestBin = ['node_modules/.bin/jest', 'node_modules/jest/bin/jest.js'];
 
-  switch (packageManager) {
-    case 'npm':
-      return `npm exec jest`;
-    case 'yarn':
-      return `yarn jest`;
-    case 'pnpm':
-      return `pnpm jest`;
-    case 'bun':
-      return `bun run jest`;
-    default:
-      return `npm exec jest`;
+  let jestPath: string;
+  jestPath = mayRelativeJestBin.find((relativeJestBin) => isNodeExecuteAbleFile(path.join(cwd, relativeJestBin)));
+  jestPath = jestPath || path.join(cwd, fallbackRelativeJestBinPath);
+
+  return normalizePath(jestPath);
+}
+
+export function isNodeExecuteAbleFile(filepath: string): boolean {
+  try {
+    execSync(`node ${filepath} --help`);
+    return true;
+  } catch (err) {
+    return false;
   }
 }
 

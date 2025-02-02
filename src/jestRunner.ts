@@ -52,11 +52,10 @@ export class JestRunner {
     await editor.document.save();
     const testName = currentTestName || this.findCurrentTestName(editor);
     const resolvedTestName = updateTestNameIfUsingProperties(testName);
-    const normalizedPath = normalizePath(editor.document.fileName);
 
     const filePath = editor.document.fileName;
     const cwd = await findJsWorkspaceRoot(filePath);
-    const jestCommand = await getJestCommand(this.config, normalizedPath);
+    const jestCommand = await getJestCommand(this.config, cwd);
     const debugConfig = await this.getDebugConfig(editor.document.fileName, jestCommand, cwd, resolvedTestName);
 
     for (const command of this.commands) {
@@ -73,13 +72,11 @@ export class JestRunner {
     cwd: string,
     currentTestName?: string,
   ): Promise<vscode.DebugConfiguration> {
-    const splitCommand = program.split(' ');
-
     const config: vscode.DebugConfiguration = {
       console: 'integratedTerminal',
       internalConsoleOptions: 'neverOpen',
       name: 'Debug Jest Tests',
-      program: splitCommand[0],
+      program,
       request: 'launch',
       type: 'node',
       cwd,
@@ -87,9 +84,6 @@ export class JestRunner {
     }
 
     config.args = config.args ? config.args.slice() : [];
-
-    // add the rest of the invoke args
-    config.args.push(...splitCommand.slice(1));
 
     const standardArgs = await buildJestArgs(filePath, currentTestName, false, this.config);
     pushMany(config.args, standardArgs);
