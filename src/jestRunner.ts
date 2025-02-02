@@ -64,19 +64,12 @@ export class JestRunner {
     const jestCommand = await getJestCommand(this.config, normalizedPath);
     const debugConfig = await this.getDebugConfig(editor.document.fileName, jestCommand, cwd, resolvedTestName);
 
-    await this.executeDebugCommand({
-      config: debugConfig,
-      documentUri: editor.document.uri,
-    });
-  }
-
-  private async executeDebugCommand(debugCommand: DebugCommand) {
     for (const command of this.commands) {
       await this.runTerminalCommand(command);
     }
     this.commands = [];
 
-    vscode.debug.startDebugging(undefined, debugCommand.config);
+    vscode.debug.startDebugging(undefined, debugConfig);
   }
 
   private async getDebugConfig(
