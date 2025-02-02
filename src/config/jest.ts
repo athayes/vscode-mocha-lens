@@ -3,18 +3,18 @@ import { escapeRegExpForPath, escapeSingleQuotes, normalizePath, quote } from '.
 import { findJestConfig } from './files';
 import { Config } from './config';
 
-export async function getJestCommand(config: Config) {
+export async function getJestCommand(config: Config, normalizedPath: string): Promise<string> {
   // custom
   const jestCommand: string = config.getJestCommand();
   if (jestCommand) {
     return jestCommand;
   }
 
-  const packageManager = await detect();
+  const packageManager = await detect({ cwd: normalizedPath });
 
   switch (packageManager) {
     case 'npm':
-      return `npx jest`;
+      return `npm exec jest`;
     case 'yarn':
       return `yarn jest`;
     case 'pnpm':
@@ -22,7 +22,7 @@ export async function getJestCommand(config: Config) {
     case 'bun':
       return `bun run jest`;
     default:
-      return `npx jest`;
+      return `npm exec jest`;
   }
 }
 
