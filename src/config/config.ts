@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { CodeLensOption, validateCodeLensOptions } from '../util';
+import { CodeLensOption } from '../types';
 
 export class Config {
   public get preserveEditorFocus(): boolean {
@@ -42,3 +42,12 @@ export class Config {
     return [];
   }
 }
+
+function isCodeLensOption(option: string): option is CodeLensOption {
+  return ['run', 'debug'].includes(option);
+}
+
+export function validateCodeLensOptions(maybeCodeLensOptions: string[]): CodeLensOption[] {
+  return [...new Set(maybeCodeLensOptions)].filter((value) => isCodeLensOption(value)) as CodeLensOption[];
+}
+
