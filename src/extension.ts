@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
 import { JestRunner } from './jestRunner';
-import { JestCodeLensProvider } from './jestCodeLensProvider';
+import { LensProvider } from './lensProvider';
 import { Config } from './config/config';
 
 type Argument = Record<string, unknown> | string;
@@ -9,7 +9,7 @@ type Argument = Record<string, unknown> | string;
 export function activate(context: vscode.ExtensionContext): void {
   const config = new Config();
   const jestRunner = new JestRunner(config);
-  const codeLensProvider = new JestCodeLensProvider(config.codeLensOptions);
+  const codeLensProvider = new LensProvider(config.codeLensOptions);
 
   const runJest = vscode.commands.registerCommand('extension.runJest', async (argument: Argument) => {
     return jestRunner.runCurrentTest(argument);

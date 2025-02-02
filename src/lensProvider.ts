@@ -3,7 +3,7 @@ import parse from 'jest-editor-support/build/parsers';
 import { CodeLens, CodeLensProvider, Range, TextDocument } from 'vscode';
 import { findFullTestName, escapeRegExp, CodeLensOption } from './util';
 
-export class JestCodeLensProvider implements CodeLensProvider {
+export class LensProvider implements CodeLensProvider {
   private lastSuccessfulCodeLens: CodeLens[] = [];
 
   constructor(private readonly codeLensOptions: CodeLensOption[]) {}
