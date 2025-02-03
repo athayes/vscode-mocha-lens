@@ -1,5 +1,3 @@
-import { execSync } from 'child_process';
-
 export function isWindows(): boolean {
   return process.platform.includes('win32');
 }

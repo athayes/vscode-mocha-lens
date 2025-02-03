@@ -13,7 +13,6 @@ import { buildJestArgs, getJestCommand } from './config/jest';
 
 export class JestRunner {
   private terminal: vscode.Terminal;
-  private commands: string[] = [];
 
   constructor(private readonly config: Config) {
     vscode.window.onDidCloseTerminal((closedTerminal: vscode.Terminal) => {
@@ -33,7 +32,6 @@ export class JestRunner {
     await editor.document.save();
     const testName = currentTestName || this.findCurrentTestName(editor);
     const resolvedTestName = updateTestNameIfUsingProperties(testName);
-    ///const normalizedPath = normalizePath(editor.document.fileName);
     const filePath = editor.document.fileName;
     const cwd = await findJsWorkspaceRoot(filePath);
 
@@ -41,6 +39,7 @@ export class JestRunner {
     const jestCommand = await getJestCommand(this.config, cwd);
     const command = `${jestCommand} ${args.join(' ')}`;
 
+    await this.runTerminalCommand(`cd ${cwd}`);
     await this.runTerminalCommand(command);
   }
 
@@ -59,11 +58,7 @@ export class JestRunner {
     const jestCommand = await getJestCommand(this.config, cwd);
     const debugConfig = await this.getDebugConfig(editor.document.fileName, jestCommand, cwd, resolvedTestName);
 
-    for (const command of this.commands) {
-      await this.runTerminalCommand(command);
-    }
-    this.commands = [];
-
+    await this.runTerminalCommand(`cd ${cwd}`);
     vscode.debug.startDebugging(undefined, debugConfig);
   }
 

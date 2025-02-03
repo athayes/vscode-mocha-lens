@@ -13,17 +13,3 @@ export async function findJsWorkspaceRoot(filePath: string) {
 
   return vscode.workspace.getWorkspaceFolder(vscode.window.activeTextEditor.document.uri).uri.fsPath;
 }
-
-const jestConfigPossibilities = [
-  'jest.config.js',
-  'jest.config.ts',
-  'jest.config.cjs',
-  'jest.config.mjs',
-  'jest.config.json',
-];
-
-export async function findJestConfig(filePath: string) {
-  const cwd = path.dirname(filePath);
-  // todo get root folder and add stopAt
-  return findUp(jestConfigPossibilities, { cwd });
-}

@@ -63,8 +63,6 @@ function getTestsBlocks(
   }
 
   const fullTestName = escapeRegExp(findFullTestName(parsedNode.start.line, parseResults));
-
   codeLens.push(...codeLensOptions.map((option) => getCodeLensForOption(range, option, fullTestName)));
-
   return codeLens;
 }
