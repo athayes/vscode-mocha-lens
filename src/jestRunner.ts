@@ -6,7 +6,6 @@ import {
   findFullTestName,
   pushMany,
   unquote,
-  updateTestNameIfUsingProperties
 } from './util';
 import { findJsWorkspaceRoot } from './config/files';
 import { buildJestArgs, getJestCommand } from './config/jest';
@@ -111,4 +110,16 @@ export class JestRunner {
     await vscode.commands.executeCommand('workbench.action.terminal.clear');
     this.terminal.sendText(command);
   }
+}
+
+export function updateTestNameIfUsingProperties(receivedTestName?: string) {
+  if (receivedTestName === undefined) {
+    return undefined;
+  }
+
+  const namePropertyRegex = /(?<=\S)\\.name/g;
+  const testNameWithoutNameProperty = receivedTestName.replace(namePropertyRegex, '');
+
+  const prototypePropertyRegex = /\w*\\.prototype\\./g;
+  return testNameWithoutNameProperty.replace(prototypePropertyRegex, '');
 }

@@ -71,15 +71,3 @@ export function unquote(s: string): string {
 export function pushMany<T>(arr: T[], items: T[]): number {
   return Array.prototype.push.apply(arr, items);
 }
-
-export function updateTestNameIfUsingProperties(receivedTestName?: string) {
-  if (receivedTestName === undefined) {
-    return undefined;
-  }
-
-  const namePropertyRegex = /(?<=\S)\\.name/g;
-  const testNameWithoutNameProperty = receivedTestName.replace(namePropertyRegex, '');
-
-  const prototypePropertyRegex = /\w*\\.prototype\\./g;
-  return testNameWithoutNameProperty.replace(prototypePropertyRegex, '');
-}
