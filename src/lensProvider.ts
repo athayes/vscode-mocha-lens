@@ -1,8 +1,11 @@
 import type { ParsedNode } from 'jest-editor-support';
 import parse from 'jest-editor-support/build/parsers';
-import { CodeLens, CodeLensProvider, Range, TextDocument } from 'vscode';
-import { findFullTestName, escapeRegExp } from './util';
+import { CodeLens, CodeLensProvider, Range, TextDocument, window, workspace } from 'vscode';
+import { escapeRegExp, findFullTestName, normalizePath } from './util';
 import { CodeLensOption } from './types';
+import { homedir } from 'os';
+import { findJestConfig } from './config/files';
+import { sync } from 'fast-glob';
 
 export class LensProvider implements CodeLensProvider {
   private lastSuccessfulCodeLens: CodeLens[] = [];
@@ -11,6 +14,23 @@ export class LensProvider implements CodeLensProvider {
 
   public async provideCodeLenses(document: TextDocument): Promise<CodeLens[]> {
     try {
+      const filePath = normalizePath(document.fileName);
+      const root =  normalizePath(this.currentWorkspaceFolderPath || homedir());
+
+      const config = workspace.getConfiguration('jestrunner');
+      const exclude = config.get<string[]>('exclude', []);
+
+      // If matches the exclude glob, return empty array
+      if (exclude && exclude.length > 0 && !sync(exclude, { cwd: root, absolute: true }).includes(filePath)) {
+        return [];
+      }
+
+      // Check if there is an ancestor jest config
+      const jestConfigPath = findJestConfig(filePath, root);
+      if (!jestConfigPath) {
+        return [];
+      }
+
       const parseResults = parse(document.fileName, document.getText(), { plugins: { decorators: 'legacy' } }).root
         .children;
       this.lastSuccessfulCodeLens = parseResults.flatMap((parseResult) =>
@@ -20,6 +40,15 @@ export class LensProvider implements CodeLensProvider {
       console.error('jest-editor-support parser returned error', e);
     }
     return this.lastSuccessfulCodeLens;
+  }
+
+  private get currentWorkspaceFolderPath(): string | undefined {
+    const activeEditor = window.activeTextEditor;
+    if (activeEditor) {
+      const workspaceFolder = workspace.getWorkspaceFolder(activeEditor.document.uri);
+      return workspaceFolder ? workspaceFolder.uri.fsPath : undefined;
+    }
+    return undefined;
   }
 }
 

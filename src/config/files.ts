@@ -2,6 +2,10 @@ import { findUp } from 'find-up';
 import vscode from 'vscode';
 import * as path from 'path';
 import { normalizePath } from '../util';
+import { readFile } from 'fs';
+import { promisify } from 'util';
+
+const readFileAsync = promisify(readFile);
 
 export async function findJsWorkspaceRoot(filePath: string) {
   // todo should stopAt the vscode workspace root
@@ -12,4 +16,35 @@ export async function findJsWorkspaceRoot(filePath: string) {
   }
 
   return vscode.workspace.getWorkspaceFolder(vscode.window.activeTextEditor.document.uri).uri.fsPath;
+}
+
+const jestConfigPossibilities = [
+  'jest.config.js',
+  'jest.config.ts',
+  'jest.config.cjs',
+  'jest.config.mjs',
+  'jest.config.json',
+];
+
+export async function findJestConfig(filePath: string, stopAt?: string): Promise<string | undefined> {
+  const cwd = path.dirname(filePath);
+
+  // Try to find jest config files
+  const jestConfigPath = await findUp(jestConfigPossibilities, { cwd, stopAt });
+  if (jestConfigPath) {
+    return jestConfigPath;
+  }
+
+  // Try to find package.json and check for "jest" entry
+  const packageJsonPath = await findUp('package.json', { cwd, stopAt });
+  if (packageJsonPath) {
+
+    const packageJsonContent = await readFileAsync(packageJsonPath, 'utf-8');
+    const packageJson = JSON.parse(packageJsonContent);
+    if (packageJson.jest) {
+      return packageJsonPath;
+    }
+  }
+
+  return undefined;
 }

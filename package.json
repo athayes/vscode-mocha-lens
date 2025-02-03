@@ -111,6 +111,7 @@
   },
   "dependencies": {
     "detect-package-manager": "^3.0.2",
+    "fast-glob": "^3.3.3",
     "find-up": "^7.0.0",
     "jest-editor-support": "^31.1.2"
   }
