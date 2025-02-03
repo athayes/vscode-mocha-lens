@@ -4,7 +4,7 @@ import { CodeLens, CodeLensProvider, Range, TextDocument, window, workspace } fr
 import { escapeRegExp, findFullTestName, normalizePath } from './util';
 import { CodeLensOption } from './types';
 import { homedir } from 'os';
-import { findJestConfig } from './config/files';
+import { findJestConfig, findJestInPackageJson } from './config/files';
 import { sync } from 'fast-glob';
 
 export class LensProvider implements CodeLensProvider {
@@ -28,7 +28,10 @@ export class LensProvider implements CodeLensProvider {
       // Check if there is an ancestor jest config
       const jestConfigPath = findJestConfig(filePath, root);
       if (!jestConfigPath) {
-        return [];
+        const isJestInPackageJson = await findJestInPackageJson(filePath);
+        if (!isJestInPackageJson) {
+          return [];
+        }
       }
 
       const parseResults = parse(document.fileName, document.getText(), { plugins: { decorators: 'legacy' } }).root

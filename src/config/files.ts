@@ -35,14 +35,18 @@ export async function findJestConfig(filePath: string, stopAt?: string): Promise
     return jestConfigPath;
   }
 
-  // Try to find package.json and check for "jest" entry
-  const packageJsonPath = await findUp('package.json', { cwd, stopAt });
-  if (packageJsonPath) {
+  return undefined;
+}
 
-    const packageJsonContent = await readFileAsync(packageJsonPath, 'utf-8');
-    const packageJson = JSON.parse(packageJsonContent);
-    if (packageJson.jest) {
-      return packageJsonPath;
+export async function findJestInPackageJson(filePath: string): Promise<string | undefined> {
+  const cwd = path.dirname(filePath);
+  const packageJsonPath = await findUp('package.json', { cwd });
+
+  if (packageJsonPath) {
+    const packageJson = JSON.parse(await readFileAsync(packageJsonPath, 'utf8'));
+
+    if (packageJson.devDependencies?.jest || packageJson.dependencies?.jest) {
+      return path.dirname(packageJsonPath);
     }
   }
 
