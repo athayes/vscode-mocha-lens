@@ -8,7 +8,6 @@ import { promisify } from 'util';
 const readFileAsync = promisify(readFile);
 
 export async function findJsWorkspaceRoot(filePath: string) {
-  // todo should stopAt the vscode workspace root
   const packageJson = await findUp('package.json', { cwd: path.dirname(normalizePath(filePath)) });
 
   if (packageJson) {
