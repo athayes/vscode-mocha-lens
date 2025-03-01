@@ -29,7 +29,7 @@
           "jestrunner.debugOptions": {
             "type": "object",
             "default": {},
-            "description": "Add or overwrite vscode debug configurations (only in debug mode) (e.g. { \"args\": [\"--no-cache\"] })",
+            "description": "Add or overwrite vscode debug configurations, for both `run` and `debug` (e.g. { \"args\": [\"--no-cache\"] })",
             "scope": "window"
           },
           "jestrunner.runOptions": {
@@ -46,12 +46,6 @@
             "type": "string",
             "default": "**/*.{test,spec}.{js,jsx,ts,tsx}",
             "description": "CodeLens will be shown on files matching this pattern"
-          },
-          "jestrunner.preserveEditorFocus": {
-            "type": "boolean",
-            "default": false,
-            "description": "Preserve focus on editor when running tests",
-            "scope": "window"
           }
         }
       }
