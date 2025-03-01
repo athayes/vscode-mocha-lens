@@ -13,14 +13,14 @@ export function activate(context: vscode.ExtensionContext): void {
 
   const runJest = vscode.commands.registerCommand('extension.runJest', async (argument: Argument) => {
     const currentTestName = typeof argument === 'string' ? argument : undefined;
-    return jestRunner.debugCurrentTest(false, currentTestName);
+    return jestRunner.runTest(false, currentTestName);
   });
 
   const debugJest = vscode.commands.registerCommand('extension.debugJest', async (argument: Argument) => {
     if (typeof argument === 'string') {
-      return jestRunner.debugCurrentTest(true, argument);
+      return jestRunner.runTest(true, argument);
     } else {
-      return jestRunner.debugCurrentTest(true, undefined);
+      return jestRunner.runTest(true, undefined);
     }
   });
 

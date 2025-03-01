@@ -21,7 +21,7 @@ export class JestRunner {
     });
   }
 
-  public async debugCurrentTest(debug: boolean, currentTestName?: string): Promise<void> {
+  public async runTest(debug: boolean, currentTestName?: string): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
       return;
@@ -36,7 +36,6 @@ export class JestRunner {
     const jestCommand = await getJestCommand(this.config);
     const debugConfig = await this.getDebugConfig(editor.document.fileName, jestCommand, cwd, debug, resolvedTestName);
 
-    await this.runTerminalCommand(`cd ${cwd}`);
     vscode.debug.startDebugging(undefined, debugConfig);
   }
 
@@ -80,15 +79,6 @@ export class JestRunner {
 
     const fullTestName = findFullTestName(selectedLine, testFile.root.children);
     return fullTestName ? escapeRegExp(fullTestName) : undefined;
-  }
-
-  private async runTerminalCommand(command: string) {
-    if (!this.terminal) {
-      this.terminal = vscode.window.createTerminal('jest');
-    }
-    this.terminal.show(this.config.preserveEditorFocus);
-    await vscode.commands.executeCommand('workbench.action.terminal.clear');
-    this.terminal.sendText(command);
   }
 }
 

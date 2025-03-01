@@ -8,7 +8,6 @@ const readFileAsync = promisify(readFile);
 
 export async function findJsWorkspaceRoot(filePath: string) {
   const cwd = path.dirname(filePath);
-
   const packageJson = await findUp('package.json', { cwd });
 
   if (packageJson) {
