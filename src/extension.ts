@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 
 import { Jest } from './jest';
 import { Lens } from './lens';
+import { getCodeLensSelector } from './config/config';
 
 type Argument = Record<string, unknown> | string;
 
@@ -15,21 +16,12 @@ export function activate(context: vscode.ExtensionContext): void {
   });
 
   const debugJest = vscode.commands.registerCommand('extension.debugJest', async (argument: Argument) => {
-    if (typeof argument === 'string') {
-      return jest.runTest(true, argument);
-    } else {
-      return jest.runTest(true, undefined);
-    }
+    const currentTestName = typeof argument === 'string' ? argument : undefined;
+    return jest.runTest(true, currentTestName);
   });
 
-  const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider(
-    [
-      {
-        pattern: vscode.workspace.getConfiguration().get('jestrunner.codeLensSelector'),
-      },
-    ],
-    codeLensProvider,
-  );
+  const pattern = getCodeLensSelector();
+  const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider([{ pattern }], codeLensProvider);
 
   context.subscriptions.push(codeLensProviderDisposable);
   context.subscriptions.push(runJest);

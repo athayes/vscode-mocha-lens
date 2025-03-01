@@ -16,7 +16,7 @@ export class Lens implements CodeLensProvider {
   public async provideCodeLenses(document: TextDocument): Promise<CodeLens[]> {
     try {
       const filePath = normalizePath(document.fileName);
-      const root =  normalizePath(this.currentWorkspaceFolderPath || homedir());
+      const root = normalizePath(this.currentWorkspaceFolderPath || homedir());
 
       const config = workspace.getConfiguration('jestrunner');
       const exclude = config.get<string[]>('exclude', []);

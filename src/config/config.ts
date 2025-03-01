@@ -7,9 +7,7 @@ export function getRunOptions(): string[] | null {
     if (Array.isArray(runOptions)) {
       return runOptions;
     } else {
-      vscode.window.showWarningMessage(
-        'Please check your vscode settings. "jestrunner.runOptions" must be an Array. ',
-      );
+      vscode.window.showWarningMessage('Please check your vscode settings. "jestrunner.runOptions" must be an Array. ');
     }
   }
   return null;
@@ -35,6 +33,10 @@ export function getCodeLensOptions(): CodeLensOption[] {
     return validateCodeLensOptions(codeLensOptions);
   }
   return [];
+}
+
+export function getCodeLensSelector(): string {
+  return vscode.workspace.getConfiguration().get('jestrunner.codeLensSelector');
 }
 
 function isCodeLensOption(option: string): option is CodeLensOption {

@@ -1,11 +1,6 @@
 import * as vscode from 'vscode';
 import parse from 'jest-editor-support/build/parsers';
-import {
-  escapeRegExp,
-  findFullTestName,
-  pushMany,
-  unquote,
-} from './util';
+import { escapeRegExp, findFullTestName, pushMany, unquote } from './util';
 import { findJsWorkspaceRoot } from './config/files';
 import { buildJestArgs, getJestCommand } from './config/jest';
 import { getDebugOptions } from './config/config';
@@ -56,7 +51,7 @@ export class Jest {
       cwd,
       noDebug: !debug,
       ...getDebugOptions(),
-    }
+    };
 
     config.args = config.args ? config.args.slice() : [];
     const standardArgs = await buildJestArgs(filePath, currentTestName, false);

@@ -56,4 +56,3 @@ export async function buildJestArgs(
   args.push(...setOptions);
   return args;
 }
-
