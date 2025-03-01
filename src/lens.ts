@@ -6,6 +6,7 @@ import { CodeLensOption, lensOptions } from './lensOptions';
 import { homedir } from 'os';
 import { findJestConfig, findJestInPackageJson } from './config/files';
 import { sync } from 'fast-glob';
+import { getExclude } from './config/config';
 
 export class Lens implements CodeLensProvider {
   private lastSuccessfulCodeLens: CodeLens[] = [];
@@ -17,8 +18,7 @@ export class Lens implements CodeLensProvider {
       const filePath = normalizePath(document.fileName);
       const root = normalizePath(this.currentWorkspaceFolderPath || homedir());
 
-      const config = workspace.getConfiguration('jestrunner');
-      const exclude = config.get<string[]>('exclude', []);
+      const exclude = getExclude()
 
       // If matches the exclude glob, return empty array
       if (exclude && exclude.length > 0 && sync(exclude, { cwd: root, absolute: true }).includes(filePath)) {
