@@ -2,11 +2,10 @@ import type { ParsedNode } from 'jest-editor-support';
 import parse from 'jest-editor-support/build/parsers';
 import { CodeLens, CodeLensProvider, Range, TextDocument, window, workspace } from 'vscode';
 import { escapeRegExp, findFullTestName, normalizePath } from './util';
-import { CodeLensOption } from './types';
+import { CodeLensOption, lensOptions } from './lensOptions';
 import { homedir } from 'os';
 import { findJestConfig, findJestInPackageJson } from './config/files';
 import { sync } from 'fast-glob';
-import { getCodeLensOptions } from './config/config';
 
 export class Lens implements CodeLensProvider {
   private lastSuccessfulCodeLens: CodeLens[] = [];
@@ -38,7 +37,7 @@ export class Lens implements CodeLensProvider {
       const parseResults = parse(document.fileName, document.getText(), { plugins: { decorators: 'legacy' } }).root
         .children;
       this.lastSuccessfulCodeLens = parseResults.flatMap((parseResult) =>
-        getTestsBlocks(parseResult, parseResults, getCodeLensOptions()),
+        getTestsBlocks(parseResult, parseResults, lensOptions),
       );
     } catch (e) {
       console.error('jest-editor-support parser returned error', e);

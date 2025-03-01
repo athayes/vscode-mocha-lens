@@ -42,19 +42,6 @@
             "description": "Add CLI Options to the Jest Command e.g. https://jestjs.io/docs/en/cli",
             "scope": "window"
           },
-          "jestrunner.codeLens": {
-            "type": "array",
-            "default": [
-              "run",
-              "debug"
-            ],
-            "description": "Enable desired codeLens, possible value : 'run', 'debug'. Defaults to ['run', 'debug'] ",
-            "items": {
-              "type": "string",
-              "description": "Options: 'run', 'debug'"
-            },
-            "scope": "window"
-          },
           "jestrunner.codeLensSelector": {
             "type": "string",
             "default": "**/*.{test,spec}.{js,jsx,ts,tsx}",
