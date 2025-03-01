@@ -7,7 +7,7 @@ import { homedir } from 'os';
 import { findJestConfig, findJestInPackageJson } from './config/files';
 import { sync } from 'fast-glob';
 
-export class LensProvider implements CodeLensProvider {
+export class Lens implements CodeLensProvider {
   private lastSuccessfulCodeLens: CodeLens[] = [];
 
   constructor(private readonly codeLensOptions: CodeLensOption[]) {}
