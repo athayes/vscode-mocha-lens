@@ -54,7 +54,7 @@ export class Jest {
     };
 
     config.args = config.args ? config.args.slice() : [];
-    const standardArgs = await buildJestArgs(filePath, currentTestName, false);
+    const standardArgs = await buildJestArgs(filePath, currentTestName);
     pushMany(config.args, standardArgs);
     config.args.push('--runInBand');
 

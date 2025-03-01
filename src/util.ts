@@ -11,10 +11,6 @@ export function escapeRegExp(s: string): string {
   return escapedString.replace(/\\\(\\\.\\\*\\\?\\\)/g, '(.*?)'); // should revert the escaping of match all regex patterns.
 }
 
-export function escapeRegExpForPath(s: string): string {
-  return s.replace(/[*+?^${}<>()|[\]]/g, '\\$&'); // $& means the whole matched string
-}
-
 export function findFullTestName(selectedLine: number, children: any[]): string | undefined {
   if (!children) {
     return;
@@ -45,15 +41,6 @@ function resolveTestNameStringInterpolation(s: string): string {
   const variableRegex = /(\${?[A-Za-z0-9_]+}?|%[psdifjo#%])/gi;
   const matchAny = '(.*?)';
   return s.replace(variableRegex, matchAny);
-}
-
-export function escapeSingleQuotes(s: string): string {
-  return isWindows() ? s : s.replace(/'/g, "'\\''");
-}
-
-export function quote(s: string): string {
-  const q = isWindows() ? '"' : `'`;
-  return [q, s, q].join('');
 }
 
 export function unquote(s: string): string {

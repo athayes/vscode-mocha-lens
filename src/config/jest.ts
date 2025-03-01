@@ -1,4 +1,4 @@
-import { escapeRegExpForPath, escapeSingleQuotes, normalizePath, quote } from '../util';
+import { normalizePath } from '../util';
 import { getConfigJestCommand, getJestPath, getRunOptions } from './config';
 
 export async function getJestCommand(): Promise<string> {
@@ -31,26 +31,15 @@ function getJestBinPath(): string {
 export async function buildJestArgs(
   filePath: string,
   testName: string,
-  withQuotes: boolean,
-  options: string[] = [],
 ): Promise<string[]> {
   const args: string[] = [];
-  const quoter = withQuotes ? quote : (str) => str;
-
-  const normalizedFilePath = normalizePath(filePath);
-  args.push(quoter(escapeRegExpForPath(normalizedFilePath)));
+  args.push(filePath);
 
   if (testName) {
     args.push('-t');
-    args.push(quoter(escapeSingleQuotes(testName)));
+    args.push(testName);
   }
 
-  const setOptions = new Set(options);
-  const runOptions = getRunOptions();
-  if (runOptions) {
-    runOptions.forEach((option) => setOptions.add(option));
-  }
-
-  args.push(...setOptions);
+  args.push(...getRunOptions());
   return args;
 }
