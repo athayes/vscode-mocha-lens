@@ -1,7 +1,6 @@
 import { escapeRegExpForPath, escapeSingleQuotes, normalizePath, quote } from '../util';
 import * as vscode from 'vscode';
 import { Config } from './config';
-import { execSync } from 'child_process';
 
 export async function getJestCommand(config: Config): Promise<string> {
   const jestCommand: string = config.getJestCommand();
@@ -29,15 +28,6 @@ function getJestBinPath(): string {
   // jestPath = jestPath || path.join(cwd, fallbackRelativeJestBinPath);
 
   return normalizePath('node_modules/jest/bin/jest.js');
-}
-
-export function isNodeExecuteAbleFile(filepath: string): boolean {
-  try {
-    execSync(`node ${filepath} --help`);
-    return true;
-  } catch (err) {
-    return false;
-  }
 }
 
 export async function buildJestArgs(

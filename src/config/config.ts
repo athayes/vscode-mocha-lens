@@ -2,10 +2,6 @@ import * as vscode from 'vscode';
 import { CodeLensOption } from '../types';
 
 export class Config {
-  public get preserveEditorFocus(): boolean {
-    return vscode.workspace.getConfiguration().get('jestrunner.preserveEditorFocus') || false;
-  }
-
   public get runOptions(): string[] | null {
     const runOptions = vscode.workspace.getConfiguration().get('jestrunner.runOptions');
     if (runOptions) {

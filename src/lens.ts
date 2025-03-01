@@ -21,7 +21,7 @@ export class Lens implements CodeLensProvider {
       const exclude = config.get<string[]>('exclude', []);
 
       // If matches the exclude glob, return empty array
-      if (exclude && exclude.length > 0 && !sync(exclude, { cwd: root, absolute: true }).includes(filePath)) {
+      if (exclude && exclude.length > 0 && sync(exclude, { cwd: root, absolute: true }).includes(filePath)) {
         return [];
       }
 
