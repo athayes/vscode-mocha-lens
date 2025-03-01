@@ -33,7 +33,7 @@ export class JestRunner {
 
     const filePath = editor.document.fileName;
     const cwd = await findJsWorkspaceRoot(filePath);
-    const jestCommand = await getJestCommand(this.config);
+    const jestCommand = await getJestCommand();
     const debugConfig = await this.getDebugConfig(editor.document.fileName, jestCommand, cwd, debug, resolvedTestName);
 
     vscode.debug.startDebugging(undefined, debugConfig);

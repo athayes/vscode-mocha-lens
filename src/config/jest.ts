@@ -2,8 +2,8 @@ import { escapeRegExpForPath, escapeSingleQuotes, normalizePath, quote } from '.
 import * as vscode from 'vscode';
 import { Config } from './config';
 
-export async function getJestCommand(config: Config): Promise<string> {
-  const jestCommand: string = config.getJestCommand();
+export async function getJestCommand(): Promise<string> {
+  const jestCommand: string = vscode.workspace.getConfiguration().get('jestrunner.jestCommand');
   if (jestCommand) {
     return jestCommand;
   }
