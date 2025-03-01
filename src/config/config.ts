@@ -7,7 +7,7 @@ export function getRunOptions(): string[] | null {
     if (Array.isArray(runOptions)) {
       return runOptions;
     } else {
-      vscode.window.showWarningMessage('Please check your vscode settings. "jestrunner.runOptions" must be an Array. ');
+      vscode.window.showWarningMessage('Please check your vscode settings. "jestrunner.runOptions" must be an Array. ').then();
     }
   }
   return null;
@@ -22,13 +22,7 @@ export function getJestPath(): string {
 }
 
 export function getDebugOptions(): Partial<vscode.DebugConfiguration> {
-  const debugOptions = vscode.workspace.getConfiguration().get('jestrunner.debugOptions');
-  if (debugOptions) {
-    return debugOptions;
-  }
-
-  // default
-  return {};
+  return vscode.workspace.getConfiguration().get('jestrunner.debugOptions') || {};
 }
 
 // should add this to package.json...

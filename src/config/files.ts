@@ -27,9 +27,8 @@ const jestConfigPossibilities = [
 
 export async function findJestConfig(filePath: string, stopAt?: string): Promise<string | undefined> {
   const cwd = path.dirname(filePath);
-
-  // Try to find jest config files
   const jestConfigPath = await findUp(jestConfigPossibilities, { cwd, stopAt });
+
   if (jestConfigPath) {
     return jestConfigPath;
   }
