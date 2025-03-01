@@ -1,26 +1,24 @@
 import * as vscode from 'vscode';
 
-import { JestRunner } from './jestRunner';
+import { Jest } from './jest';
 import { Lens } from './lens';
-import { Config } from './config/config';
 
 type Argument = Record<string, unknown> | string;
 
 export function activate(context: vscode.ExtensionContext): void {
-  const config = new Config();
-  const jestRunner = new JestRunner(config);
-  const codeLensProvider = new Lens(config.codeLensOptions);
+  const jest = new Jest();
+  const codeLensProvider = new Lens();
 
   const runJest = vscode.commands.registerCommand('extension.runJest', async (argument: Argument) => {
     const currentTestName = typeof argument === 'string' ? argument : undefined;
-    return jestRunner.runTest(false, currentTestName);
+    return jest.runTest(false, currentTestName);
   });
 
   const debugJest = vscode.commands.registerCommand('extension.debugJest', async (argument: Argument) => {
     if (typeof argument === 'string') {
-      return jestRunner.runTest(true, argument);
+      return jest.runTest(true, argument);
     } else {
-      return jestRunner.runTest(true, undefined);
+      return jest.runTest(true, undefined);
     }
   });
 

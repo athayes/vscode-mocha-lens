@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { Config } from './config/config';
 import parse from 'jest-editor-support/build/parsers';
 import {
   escapeRegExp,
@@ -9,11 +8,12 @@ import {
 } from './util';
 import { findJsWorkspaceRoot } from './config/files';
 import { buildJestArgs, getJestCommand } from './config/jest';
+import { getDebugOptions } from './config/config';
 
-export class JestRunner {
+export class Jest {
   private terminal: vscode.Terminal;
 
-  constructor(private readonly config: Config) {
+  constructor() {
     vscode.window.onDidCloseTerminal((closedTerminal: vscode.Terminal) => {
       if (this.terminal === closedTerminal) {
         this.terminal = null;
@@ -55,11 +55,11 @@ export class JestRunner {
       type: 'node',
       cwd,
       noDebug: !debug,
-      ...this.config.debugOptions,
+      ...getDebugOptions(),
     }
 
     config.args = config.args ? config.args.slice() : [];
-    const standardArgs = await buildJestArgs(filePath, currentTestName, false, this.config);
+    const standardArgs = await buildJestArgs(filePath, currentTestName, false);
     pushMany(config.args, standardArgs);
     config.args.push('--runInBand');
 

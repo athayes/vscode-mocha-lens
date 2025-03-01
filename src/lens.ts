@@ -6,11 +6,12 @@ import { CodeLensOption } from './types';
 import { homedir } from 'os';
 import { findJestConfig, findJestInPackageJson } from './config/files';
 import { sync } from 'fast-glob';
+import { getCodeLensOptions } from './config/config';
 
 export class Lens implements CodeLensProvider {
   private lastSuccessfulCodeLens: CodeLens[] = [];
 
-  constructor(private readonly codeLensOptions: CodeLensOption[]) {}
+  constructor() {}
 
   public async provideCodeLenses(document: TextDocument): Promise<CodeLens[]> {
     try {
@@ -37,7 +38,7 @@ export class Lens implements CodeLensProvider {
       const parseResults = parse(document.fileName, document.getText(), { plugins: { decorators: 'legacy' } }).root
         .children;
       this.lastSuccessfulCodeLens = parseResults.flatMap((parseResult) =>
-        getTestsBlocks(parseResult, parseResults, this.codeLensOptions),
+        getTestsBlocks(parseResult, parseResults, getCodeLensOptions()),
       );
     } catch (e) {
       console.error('jest-editor-support parser returned error', e);
