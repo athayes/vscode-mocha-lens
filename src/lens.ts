@@ -18,7 +18,7 @@ export class Lens implements CodeLensProvider {
       const filePath = normalizePath(document.fileName);
       const root = normalizePath(this.currentWorkspaceFolderPath || homedir());
 
-      const exclude = getExclude()
+      const exclude = getExclude();
 
       // If matches the exclude glob, return empty array
       if (exclude && exclude.length > 0 && sync(exclude, { cwd: root, absolute: true }).includes(filePath)) {

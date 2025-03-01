@@ -27,11 +27,10 @@ export function getDebugOptions(): Partial<vscode.DebugConfiguration> {
 
 // should add this to package.json...
 export function getExclude() {
-  const config = workspace.getConfiguration('jestrunner')
+  const config = workspace.getConfiguration('jestrunner');
   return config.get<string[]>('exclude', []);
 }
 
 export function getBaseGlob(): string {
   return vscode.workspace.getConfiguration().get('jestrunner.baseGlob');
 }
-
