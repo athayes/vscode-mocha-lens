@@ -13,8 +13,13 @@ export function getRunOptions(): string[] | null {
   return null;
 }
 
-export function getJestCommand(): string {
+export function getConfigJestCommand(): string {
   return vscode.workspace.getConfiguration().get('jestrunner.jestCommand');
+}
+
+// do we need this?
+export function getJestPath(): string {
+  return vscode.workspace.getConfiguration().get('jestrunner.jestPath');
 }
 
 export function getDebugOptions(): Partial<vscode.DebugConfiguration> {

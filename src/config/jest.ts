@@ -1,9 +1,8 @@
 import { escapeRegExpForPath, escapeSingleQuotes, normalizePath, quote } from '../util';
-import * as vscode from 'vscode';
-import { getRunOptions } from './config';
+import { getConfigJestCommand, getJestPath, getRunOptions } from './config';
 
 export async function getJestCommand(): Promise<string> {
-  const jestCommand: string = vscode.workspace.getConfiguration().get('jestrunner.jestCommand');
+  const jestCommand = getConfigJestCommand();
   if (jestCommand) {
     return jestCommand;
   }
@@ -11,10 +10,9 @@ export async function getJestCommand(): Promise<string> {
   return getJestBinPath();
 }
 
-// todo there has to be a bettter way to do this...
+// there has to be a bettter way to do this...
 function getJestBinPath(): string {
-  // custom
-  const jestPath: string = vscode.workspace.getConfiguration().get('jestrunner.jestPath');
+  const jestPath = getJestPath();
   if (jestPath) {
     return jestPath;
   }
