@@ -1,14 +1,15 @@
 import { findUp } from 'find-up';
 import vscode from 'vscode';
 import * as path from 'path';
-import { normalizePath } from '../util';
 import { readFile } from 'fs';
 import { promisify } from 'util';
 
 const readFileAsync = promisify(readFile);
 
 export async function findJsWorkspaceRoot(filePath: string) {
-  const packageJson = await findUp('package.json', { cwd: path.dirname(normalizePath(filePath)) });
+  const cwd = path.dirname(filePath);
+
+  const packageJson = await findUp('package.json', { cwd });
 
   if (packageJson) {
     return path.dirname(packageJson);

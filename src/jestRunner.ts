@@ -21,28 +21,7 @@ export class JestRunner {
     });
   }
 
-  public async runCurrentTest(argument?: Record<string, unknown> | string, options?: string[]): Promise<void> {
-    const currentTestName = typeof argument === 'string' ? argument : undefined;
-    const editor = vscode.window.activeTextEditor;
-    if (!editor) {
-      return;
-    }
-
-    await editor.document.save();
-    const testName = currentTestName || this.findCurrentTestName(editor);
-    const resolvedTestName = updateTestNameIfUsingProperties(testName);
-    const filePath = editor.document.fileName;
-    const cwd = await findJsWorkspaceRoot(filePath);
-
-    const args = await buildJestArgs(editor.document.fileName, resolvedTestName, true, this.config, options);
-    const jestCommand = await getJestCommand(this.config, cwd);
-    const command = `${jestCommand} ${args.join(' ')}`;
-
-    await this.runTerminalCommand(`cd ${cwd}`);
-    await this.runTerminalCommand(command);
-  }
-
-  public async debugCurrentTest(currentTestName?: string): Promise<void> {
+  public async debugCurrentTest(debug: boolean, currentTestName?: string): Promise<void> {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
       return;
@@ -55,7 +34,7 @@ export class JestRunner {
     const filePath = editor.document.fileName;
     const cwd = await findJsWorkspaceRoot(filePath);
     const jestCommand = await getJestCommand(this.config, cwd);
-    const debugConfig = await this.getDebugConfig(editor.document.fileName, jestCommand, cwd, resolvedTestName);
+    const debugConfig = await this.getDebugConfig(editor.document.fileName, jestCommand, cwd, debug, resolvedTestName);
 
     await this.runTerminalCommand(`cd ${cwd}`);
     vscode.debug.startDebugging(undefined, debugConfig);
@@ -65,6 +44,7 @@ export class JestRunner {
     filePath: string,
     program: string,
     cwd: string,
+    debug: boolean,
     currentTestName?: string,
   ): Promise<vscode.DebugConfiguration> {
     const config: vscode.DebugConfiguration = {
@@ -75,11 +55,11 @@ export class JestRunner {
       request: 'launch',
       type: 'node',
       cwd,
+      noDebug: !debug,
       ...this.config.debugOptions,
     }
 
     config.args = config.args ? config.args.slice() : [];
-
     const standardArgs = await buildJestArgs(filePath, currentTestName, false, this.config);
     pushMany(config.args, standardArgs);
     config.args.push('--runInBand');

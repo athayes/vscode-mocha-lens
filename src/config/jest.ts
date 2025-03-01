@@ -1,14 +1,43 @@
 import { escapeRegExpForPath, escapeSingleQuotes, normalizePath, quote } from '../util';
+import * as vscode from 'vscode';
 import { Config } from './config';
-import path from 'path';
+import { execSync } from 'child_process';
 
-export async function getJestCommand(config: Config, cwd: string): Promise<string> {
+export async function getJestCommand(config: Config): Promise<string> {
   const jestCommand: string = config.getJestCommand();
   if (jestCommand) {
     return jestCommand;
   }
 
-  return normalizePath(path.join(cwd, 'node_modules/.bin/jest'));
+  return getJestBinPath();
+}
+
+// todo there has to be a bettter way to do this...
+function getJestBinPath(): string {
+  // custom
+  const jestPath: string = vscode.workspace.getConfiguration().get('jestrunner.jestPath');
+  if (jestPath) {
+    return jestPath;
+  }
+
+  // default
+  // const fallbackRelativeJestBinPath = 'node_modules/jest/bin/jest.js';
+  // const mayRelativeJestBin = ['node_modules/.bin/jest', 'node_modules/jest/bin/jest.js'];
+  // const cwd = this.cwd;
+
+  // jestPath = mayRelativeJestBin.find((relativeJestBin) => isNodeExecuteAbleFile(path.join(cwd, relativeJestBin)));
+  // jestPath = jestPath || path.join(cwd, fallbackRelativeJestBinPath);
+
+  return normalizePath('node_modules/jest/bin/jest.js');
+}
+
+export function isNodeExecuteAbleFile(filepath: string): boolean {
+  try {
+    execSync(`node ${filepath} --help`);
+    return true;
+  } catch (err) {
+    return false;
+  }
 }
 
 export async function buildJestArgs(
@@ -37,3 +66,4 @@ export async function buildJestArgs(
   args.push(...setOptions);
   return args;
 }
+
