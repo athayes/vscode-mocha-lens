@@ -1,5 +1,4 @@
 import * as vscode from 'vscode';
-import { CodeLensOption } from '../lensOptions';
 
 export function getRunOptions(): string[] | null {
   const runOptions = vscode.workspace.getConfiguration().get('jestrunner.runOptions');
@@ -32,14 +31,7 @@ export function getDebugOptions(): Partial<vscode.DebugConfiguration> {
   return {};
 }
 
-export function getCodeLensSelector(): string {
+export function getBaseGlob(): string {
   return vscode.workspace.getConfiguration().get('jestrunner.codeLensSelector');
 }
 
-function isCodeLensOption(option: string): option is CodeLensOption {
-  return ['run', 'debug'].includes(option);
-}
-
-export function validateCodeLensOptions(maybeCodeLensOptions: string[]): CodeLensOption[] {
-  return [...new Set(maybeCodeLensOptions)].filter((value) => isCodeLensOption(value)) as CodeLensOption[];
-}

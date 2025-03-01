@@ -42,10 +42,10 @@
             "description": "Add CLI Options to the Jest Command e.g. https://jestjs.io/docs/en/cli",
             "scope": "window"
           },
-          "jestrunner.codeLensSelector": {
+          "jestrunner.baseGlob": {
             "type": "string",
             "default": "**/*.{test,spec}.{js,jsx,ts,tsx}",
-            "description": "CodeLens will be shown on files matching this pattern"
+            "description": "Files for which this extension will for includes and excludes"
           }
         }
       }

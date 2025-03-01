@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 
 import { Jest } from './jest';
 import { Lens } from './lens';
-import { getCodeLensSelector } from './config/config';
+import { getBaseGlob } from './config/config';
 
 type Argument = Record<string, unknown> | string;
 
@@ -20,7 +20,7 @@ export function activate(context: vscode.ExtensionContext): void {
     return jest.runTest(true, currentTestName);
   });
 
-  const pattern = getCodeLensSelector();
+  const pattern = getBaseGlob();
   const codeLensProviderDisposable = vscode.languages.registerCodeLensProvider([{ pattern }], codeLensProvider);
 
   context.subscriptions.push(codeLensProviderDisposable);
