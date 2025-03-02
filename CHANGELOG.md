@@ -2,7 +2,7 @@
 
 ## 0.4.52 - 2022-08-14
 
-- Let CI continously publish extension to ovsx 
+- Let CI continously publish extension to ovsx
 - Refactor jestRunner.ts to inject config in constructor #263
 
 ## 0.4.48 - 2022-08-14
@@ -82,7 +82,7 @@
 - Add explorer menus to run and debug tests with jest #149
 - chore: use eslint vs. tslint #178
 
-### Fixed 
+### Fixed
 
 - escape special characters in test filepath (#114) #162
 - Keep Run/Debug buttons shown when failed to parse document #163
@@ -139,19 +139,19 @@
 
 ### Added
 
-- add new settings codeLensSelector which enables CodeLens for files matching this pattern (default **/*.{test,spec}.{js,jsx,ts,tsx})
+- add new settings codeLensSelector which enables CodeLens for files matching this pattern (default \*_/_.{test,spec}.{js,jsx,ts,tsx})
 
 ## 0.4.21 - 2020-06-02
 
 ### Added
 
- - debug Jest CodeLens option
+- debug Jest CodeLens option
 
 ## 0.4.20 - 2020-06-02
 
 ### Added
 
-- change CodeLens filename pattern to *.test.ts,*.test.js,*.test.tsx,*.test.jsx
+- change CodeLens filename pattern to _.test.ts,_.test.js,_.test.tsx,_.test.jsx
 - add Settings to disable CodeLens
 
 ## 0.4.19 - 2020-05-28
@@ -167,6 +167,7 @@
 - Added option to run jest file with coverage to the command palette
 
 ### Fixed
+
 - Reduced bundle size
 - Run test outside a describe block
 
@@ -233,8 +234,8 @@
 - Escape Special Characters
 
 ## 0.4.2 - 2019-10-19
- 
-### Changed 
+
+### Changed
 
 - Extended Readme.
 

@@ -14,14 +14,16 @@ Looking for collaborators to help me maintain the project. Please contact me at 
 ## Features
 
 Simple way to run or debug a specific test
-*As it is possible in IntelliJ / Webstorm*
+_As it is possible in IntelliJ / Webstorm_
 
 Run & Debug your Jest Tests from
+
 - Context-Menu
 - CodeLens
 - Command Palette (strg+shift+p)
 
 ## Supports
+
 - yarn & vscode workspaces (monorepo)
 - dynamic jest config resolution
 - yarn 2 pnp
@@ -32,6 +34,7 @@ Run & Debug your Jest Tests from
 ## Usage with CRA or similar abstractions
 
 add the following command to settings:
+
 ```json
 "jestrunner.jestCommand": "npm run test --",
 "jestrunner.debugOptions": {
@@ -60,7 +63,7 @@ If you have a custom setup use the following options to customize Jest Runner:
 | jestrunner.runOptions                     | Add CLI Options to the Jest Command (e.g. `"jestrunner.runOptions": ["--coverage", "--colors"]`) https://jestjs.io/docs/en/cli                              |
 | jestrunner.jestCommand                    | Define an alternative Jest command (e.g. for Create React App and similar abstractions)                                                                     |
 | jestrunner.disableCodeLens                | Disable CodeLens feature                                                                                                                                    |
-| jestrunner.codeLensSelector               | CodeLens will be shown on files matching this pattern (default **/*.{test,spec}.{js,jsx,ts,tsx})                                                            |
+| jestrunner.codeLensSelector               | CodeLens will be shown on files matching this pattern (default \*_/_.{test,spec}.{js,jsx,ts,tsx})                                                           |
 | jestrunner.codeLens                       | Choose which CodeLens to enable, default to `["run", "debug"]`                                                                                              |
 | jestrunner.enableYarnPnpSupport           | Enable if you are using Yarn 2 with Plug'n'Play                                                                                                             |
 | jestrunner.yarnPnpCommand                 | Command for debugging with Plug'n'Play defaults to yarn-*.*js                                                                                               |
