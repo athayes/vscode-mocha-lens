@@ -1,68 +1,70 @@
+import * as assert from 'assert';
+
 describe('Example tests', () => {
   it('test with ', () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   it("test with ' single quote", () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   it('test with " double quote', () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   it('test with () parenthesis', () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   it('test with [ square bracket', () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
-  it(`test with 
+  it(`test with
 lf`, () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   it(`test with \nmanual lf`, () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   it(`test with \r\nmanual crlf`, () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   it('test with %var%', () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   const v = 'interpolated string';
   it(`test with ${v}`, () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   it('test with $var', () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   it('test with `backticks`', () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 
   it('test with regex .*$^|[]', () => {
-    expect(true);
+    assert.strictEqual(true, true);
   });
 });
 
 // #311
-it.each([1, 2])('test with generated %i', (id) => {
-  expect(true);
-});
+// it.each([1, 2])('test with generated %i', (id) => {
+//   assert.strictEqual(true, true);
+// });
 
 describe('nested', () => {
   describe('a', () => {
     it('b', () => {
-      expect(true);
+      assert.strictEqual(true, true);
     });
   });
 });
@@ -74,5 +76,5 @@ class TestClass {
   }
 }
 it(TestClass.prototype.myFunction.name, () => {
-  expect(true).toBe(true);
+  assert.strictEqual(true, true);
 });
